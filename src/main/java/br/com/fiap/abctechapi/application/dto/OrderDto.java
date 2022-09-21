@@ -7,7 +7,7 @@ import java.util.List;
 @Data
 public class OrderDto {
     private Long operatorId;
-    private List<Long> assists;
+    private List<Long> services;
     private OrderLocationDto start;
     private OrderLocationDto end;
 }

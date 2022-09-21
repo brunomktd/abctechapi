@@ -2,6 +2,7 @@ package br.com.fiap.abctechapi.model;
 
 import br.com.fiap.abctechapi.enums.StatusEnum;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "orders")
+@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
