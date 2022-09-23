@@ -11,11 +11,11 @@ spring:
     password: ${DB_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: true
 
 logging:
   level:
     org:
       hibernate:
-        type: trace
+        type: info

@@ -1,5 +1,8 @@
 package br.com.fiap.abctechapi.service.impl;
 
+import br.com.fiap.abctechapi.handler.exception.AssistanceNotFoundException;
+import br.com.fiap.abctechapi.handler.exception.MaxAssistsException;
+import br.com.fiap.abctechapi.handler.exception.MinimumAssistsRequiredException;
 import br.com.fiap.abctechapi.model.Assistance;
 import br.com.fiap.abctechapi.model.Order;
 import br.com.fiap.abctechapi.repository.AssistanceRepository;
@@ -10,8 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -27,16 +28,21 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public void saveOrder(Order order, List<Long> listAssistances) throws Exception {
+    public void saveOrder(Order order, List<Long> listAssistances) {
         ArrayList<Assistance> assistances = new ArrayList<>();
         listAssistances.forEach(i -> {
-            Assistance assistance = assistanceRepository.findById(i).orElseThrow();
+            Assistance assistance = assistanceRepository.findById(i).orElseThrow(() -> new AssistanceNotFoundException(i));
             assistances.add(assistance);
         });
+
         order.setServices(assistances);
 
-        if (!order.hasMinAssists() || order.exceedsMaxAssists()){
-            throw new Exception();
+        if (!order.hasMinAssists()){
+            throw new MinimumAssistsRequiredException("Invalid Assistance", "Necessário ao menos 1 assistência válida");
+        }
+
+        if (order.exceedsMaxAssists()){
+            throw new MaxAssistsException("Invalid Assistance", "Número máximo de assistências permitidas são 15");
         }
 
         orderRepository.save(order);
