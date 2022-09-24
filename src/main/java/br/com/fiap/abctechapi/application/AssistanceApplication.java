@@ -1,9 +1,16 @@
 package br.com.fiap.abctechapi.application;
 
-import br.com.fiap.abctechapi.application.dto.AssistanceDto;
+import br.com.fiap.abctechapi.application.dto.AssistanceRequestDto;
+import br.com.fiap.abctechapi.application.dto.AssistanceResponseDto;
+import br.com.fiap.abctechapi.model.Assistance;
 
 import java.util.List;
 
 public interface AssistanceApplication {
-    public List<AssistanceDto> getAssists();
+    List<AssistanceResponseDto> getAssists();
+
+    AssistanceResponseDto createAssistance(AssistanceRequestDto assistanceRequestDto);
+
+    AssistanceResponseDto convertEntityToAssistanceResponseDto(Assistance entity);
+
 }
