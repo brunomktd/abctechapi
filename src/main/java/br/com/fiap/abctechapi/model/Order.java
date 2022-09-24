@@ -32,6 +32,9 @@ public class Order {
     private OrderLocation end;
     private StatusEnum status;
 
+    @ManyToOne
+    private Operator operator;
+
     public boolean hasMinAssists(){
         return this.services.size() > 0;
     }
