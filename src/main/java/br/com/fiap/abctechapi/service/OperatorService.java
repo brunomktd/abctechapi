@@ -1,5 +1,6 @@
 package br.com.fiap.abctechapi.service;
 
+import br.com.fiap.abctechapi.handler.exception.OperatorNotFoundException;
 import br.com.fiap.abctechapi.model.Operator;
 
 import java.util.List;
@@ -9,5 +10,5 @@ public interface OperatorService {
 
     List<Operator> getAllOperators();
 
-    Operator getOperatorById(Long operationId);
+    Operator getOperatorById(Long operationId) throws OperatorNotFoundException;
 }

@@ -27,9 +27,9 @@ public class OperatorServiceImpl implements OperatorService {
     }
 
     @Override
-    public Operator getOperatorById(Long operatorId) {
+    public Operator getOperatorById(Long operatorId) throws OperatorNotFoundException {
         Optional<Operator> operatorById = repository.findById(operatorId);
-        if (!operatorById.isPresent()){
+        if (operatorById.isEmpty()){
             throw new OperatorNotFoundException("Operator is invalid", "O operadorId informado não existe");
         }
         return operatorById.get();
