@@ -1,9 +1,6 @@
 package br.com.fiap.abctechapi.handler;
 
-import br.com.fiap.abctechapi.handler.exception.AssistanceNotFoundException;
-import br.com.fiap.abctechapi.handler.exception.MaxAssistsException;
-import br.com.fiap.abctechapi.handler.exception.MinimumAssistsRequiredException;
-import br.com.fiap.abctechapi.handler.exception.OperatorNotFoundException;
+import br.com.fiap.abctechapi.handler.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -34,6 +31,18 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(OperatorNotFoundException.class)
     public ResponseEntity<ErrorMessageResponse> assistanceNotFound(OperatorNotFoundException exception) {
         return this.getErrorMessage(exception.getMessage(), exception.getDescription(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(StatusOrderException.class)
+    public ResponseEntity<ErrorMessageResponse> badRequestToChangeStatusOrder(StatusOrderException exception){
+        ErrorMessageResponse messageResponse = ErrorMessageResponse.builder()
+                .message(exception.getMessage())
+                .description(exception.getReason())
+                .timestamp(new Date())
+                .statusCode(exception.getStatus().value())
+                .build();
+
+        return new ResponseEntity<>(messageResponse, exception.getStatus());
     }
 
     private ResponseEntity<ErrorMessageResponse> getErrorMessage(String message, String description, HttpStatus statusHttp) {

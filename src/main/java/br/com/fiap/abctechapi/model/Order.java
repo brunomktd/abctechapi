@@ -20,8 +20,6 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    @Column(name = "operation_id", nullable = false)
-    private Long operationId;
     @ManyToMany
     private List<Assistance> services;
     @OneToOne(cascade = CascadeType.PERSIST)
@@ -33,10 +31,11 @@ public class Order {
     private StatusEnum status;
 
     @ManyToOne
+    @JoinColumn(name = "operator_id", nullable = false, foreignKey = @ForeignKey(name = "FK_operator_id"))
     private Operator operator;
 
     public boolean hasMinAssists(){
-        return this.services.size() > 0;
+        return !this.services.isEmpty();
     }
 
     public boolean exceedsMaxAssists(){

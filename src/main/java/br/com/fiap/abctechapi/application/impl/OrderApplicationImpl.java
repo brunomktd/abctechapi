@@ -13,8 +13,9 @@ import br.com.fiap.abctechapi.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.List;
-import java.util.UUID;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -27,11 +28,11 @@ public class OrderApplicationImpl implements OrderApplication {
     private AssistanceApplication assistanceApplication;
 
     @Override
-    public void createOrder(OrderRequestDto orderRequestDto) throws Exception {
+    public void createOrder(OrderRequestDto orderRequestDto) {
+        // TODO: Remover comentário no próximo commit
         Order order = Order.builder()
-                .operationId(Long.valueOf(UUID.randomUUID().toString()))
-                .start(getOrderLocationFromLocationDto(orderRequestDto.getStart()))
-                .end(getOrderLocationFromLocationDto(orderRequestDto.getEnd()))
+//                .start(getOrderLocationFromLocationDto(orderRequestDto.getStart()))
+//                .end(getOrderLocationFromLocationDto(orderRequestDto.getEnd()))
                 .build();
         orderService.saveOrder(order, orderRequestDto.getOperatorId(), orderRequestDto.getServices());
     }
@@ -48,16 +49,31 @@ public class OrderApplicationImpl implements OrderApplication {
         return allOrders.stream().map(this::convertOrderToOrderResponseDto).collect(Collectors.toList());
     }
 
+    @Override
+    public void updateOrder(Long orderId, Long status, OrderLocationDto locationDto) {
+        OrderLocation location = OrderLocation.builder()
+                .longitude(locationDto.getLongitude())
+                .latitude(locationDto.getLatitude())
+                .date(new Date())
+                .build();
+        orderService.updateOrder(orderId, status, location);
+    }
+
     private OrderResponseDto convertOrderToOrderResponseDto(Order order) {
         return OrderResponseDto.builder()
-                .operatorId(order.getOperationId())
+                .operatorId(order.getOperator().getId())
                 .services(getServices(order.getServices()))
+                .status(order.getStatus())
                 .start(convertOrderLocationToOrderLocationDto(order.getStart()))
                 .end(convertOrderLocationToOrderLocationDto(order.getEnd()))
                 .build();
     }
 
     private OrderLocationDto convertOrderLocationToOrderLocationDto(OrderLocation orderLocation) {
+        if (Objects.isNull(orderLocation)) {
+            return null;
+        }
+
         return OrderLocationDto.builder()
                 .latitude(orderLocation.getLatitude())
                 .longitude(orderLocation.getLongitude())
@@ -69,11 +85,4 @@ public class OrderApplicationImpl implements OrderApplication {
         return services.stream().map(i -> this.assistanceApplication.convertEntityToAssistanceResponseDto(i)).collect(Collectors.toList());
     }
 
-    private OrderLocation getOrderLocationFromLocationDto(OrderLocationDto orderLocationDto){
-        return OrderLocation.builder()
-                .latitude(orderLocationDto.getLatitude())
-                .longitude(orderLocationDto.getLongitude())
-                .date(orderLocationDto.getDateTime())
-                .build();
-    }
 }
