@@ -14,8 +14,8 @@ spring:
       ddl-auto: none
     show-sql: true
 
-logging:
-  level:
-    org:
-      hibernate:
-        type: info
+#logging:
+#  level:
+#    org:
+#      hibernate:
+#        type: info

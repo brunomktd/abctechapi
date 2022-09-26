@@ -1,39 +1,36 @@
-create table order_location
+create table if not exists order_location
 (
     id        bigint auto_increment
-        primary key,
+    primary key,
     date      datetime(6) null,
     latitude  double      null,
     longitude double      null
-);
+    );
 
-CREATE TABLE `orders` (
-                          `id` bigint NOT NULL AUTO_INCREMENT,
-                          `operation_id` bigint NOT NULL,
-                          `status` int DEFAULT NULL,
-                          `end_order_location_id` bigint DEFAULT NULL,
-                          `operator_id` bigint DEFAULT NULL,
-                          `start_order_location_id` bigint DEFAULT NULL,
-                          PRIMARY KEY (`id`),
-                          KEY `FK_end_order_id` (`end_order_location_id`),
-                          KEY `FK_operator_id` (`operator_id`),
-                          KEY `FK_start_order_id` (`start_order_location_id`),
-                          CONSTRAINT `FK_end_order_id` FOREIGN KEY (`end_order_location_id`) REFERENCES `order_location` (`id`),
-                          CONSTRAINT `FK_start_order_id` FOREIGN KEY (`start_order_location_id`) REFERENCES `order_location` (`id`),
-                          CONSTRAINT `FK_operator_id` FOREIGN KEY (`operator_id`) REFERENCES `operators` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+create table if not exists orders
+(
+    id                      bigint auto_increment
+    primary key,
+    status                  int    null,
+    end_order_location_id   bigint null,
+    operator_id             bigint not null,
+    start_order_location_id bigint null,
+    constraint FK_end_order_id
+    foreign key (end_order_location_id) references order_location (id),
+    constraint FK_operator_id
+    foreign key (operator_id) references operators (id),
+    constraint FK_start_order_id
+    foreign key (start_order_location_id) references order_location (id)
+    );
 
-create table orders_services
+create table if not exists orders_services
 (
     order_id    bigint not null,
     services_id bigint not null,
-    constraint FK_order_id_services_id
-        foreign key (services_id) references assistances (id),
-    constraint Fk_order_id_orders
-        foreign key (order_id) references orders (id)
-);
-
-
-
+    constraint FK_services_id_assistances_id
+    foreign key (services_id) references assistances (id),
+    constraint FK_order_id_orders_id
+    foreign key (order_id) references orders (id)
+    );
 
 

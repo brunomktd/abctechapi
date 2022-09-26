@@ -90,15 +90,11 @@ public class OrderServiceImpl implements OrderService {
         if (status == StatusEnum.EM_ANDAMENTO.ordinal() && !order.getStatus().equals(StatusEnum.EM_ANDAMENTO)) {
             order.setStatus(StatusEnum.EM_ANDAMENTO);
             order.setStart(location);
-        } else {
-            throw new StatusOrderException(HttpStatus.BAD_REQUEST, "Order ID is already in progress");
         }
 
         if (status == StatusEnum.FINALIZADO.ordinal() && order.getStatus().equals(StatusEnum.EM_ANDAMENTO)) {
             order.setStatus(StatusEnum.FINALIZADO);
             order.setEnd(location);
-        } else {
-            throw new StatusOrderException(HttpStatus.BAD_REQUEST, "Order ID must be in progress to complete");
         }
 
         orderRepository.save(order);
