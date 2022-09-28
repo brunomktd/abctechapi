@@ -83,17 +83,21 @@ public class OrderServiceImpl implements OrderService {
     public void updateOrder(Long orderId, Long status, OrderLocation location) {
         Order order = getOrderById(orderId);
 
-        if (order.getStatus().equals(StatusEnum.FINALIZADO)){
+        if (order.getStatus().equals(StatusEnum.CONCLUIDO) || order.getStatus().equals(StatusEnum.CANCELADO)){
             throw new StatusOrderException(HttpStatus.BAD_REQUEST, "Order ID is already finalized");
         }
 
-        if (status == StatusEnum.EM_ANDAMENTO.ordinal() && !order.getStatus().equals(StatusEnum.EM_ANDAMENTO)) {
-            order.setStatus(StatusEnum.EM_ANDAMENTO);
+        if (status == StatusEnum.CANCELADO.ordinal() && !order.getStatus().equals(StatusEnum.ANDAMENTO)) {
+            order.setStatus(StatusEnum.CANCELADO);
+        }
+
+        if (status == StatusEnum.ANDAMENTO.ordinal() && !order.getStatus().equals(StatusEnum.ANDAMENTO)) {
+            order.setStatus(StatusEnum.ANDAMENTO);
             order.setStart(location);
         }
 
-        if (status == StatusEnum.FINALIZADO.ordinal() && order.getStatus().equals(StatusEnum.EM_ANDAMENTO)) {
-            order.setStatus(StatusEnum.FINALIZADO);
+        if (status == StatusEnum.CONCLUIDO.ordinal() && order.getStatus().equals(StatusEnum.ANDAMENTO)) {
+            order.setStatus(StatusEnum.CONCLUIDO);
             order.setEnd(location);
         }
 
