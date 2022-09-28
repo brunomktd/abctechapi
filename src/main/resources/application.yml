@@ -11,8 +11,23 @@ spring:
     password: ${DB_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
     show-sql: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+app:
+  name: ABC Tech API
+  api:
+    title: ABC Tech API
+    version: 1.0.0
+    description: API DOC to work ABC Tech
+    base-package: br.com.fiap.abctechapi
+    contact-name: Grupo B
+#    contact-email: apisupportgroup@abc.com
+    swagger:
+      enable: true
 
 #logging:
 #  level:
