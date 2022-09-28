@@ -42,7 +42,7 @@ public class OrderServiceImpl implements OrderService {
     public void saveOrder(Order order, Long operatorId, List<Long> listAssistances) {
         verifyOperatorId(order, operatorId);
         verifyAndCreateAssistances(order, listAssistances);
-        order.setStatus(StatusEnum.ABERTO);
+        order.setStatus(StatusEnum.PENDENTE);
         orderRepository.save(order);
     }
 
