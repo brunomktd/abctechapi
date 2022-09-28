@@ -5,12 +5,10 @@ import br.com.fiap.abctechapi.handler.exception.AssistanceNotFoundException;
 import br.com.fiap.abctechapi.handler.exception.MaxAssistsException;
 import br.com.fiap.abctechapi.handler.exception.MinimumAssistsRequiredException;
 import br.com.fiap.abctechapi.handler.exception.StatusOrderException;
-import br.com.fiap.abctechapi.model.Assistance;
-import br.com.fiap.abctechapi.model.Operator;
-import br.com.fiap.abctechapi.model.Order;
-import br.com.fiap.abctechapi.model.OrderLocation;
+import br.com.fiap.abctechapi.model.*;
 import br.com.fiap.abctechapi.repository.AssistanceRepository;
 import br.com.fiap.abctechapi.repository.OrderRepository;
+import br.com.fiap.abctechapi.service.ClientService;
 import br.com.fiap.abctechapi.service.OperatorService;
 import br.com.fiap.abctechapi.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,21 +27,29 @@ public class OrderServiceImpl implements OrderService {
     private final AssistanceRepository assistanceRepository;
 
     private final OperatorService operatorService;
+    private final ClientService clientService;
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository, AssistanceRepository assistanceRepository, OperatorService operatorService) {
+    public OrderServiceImpl(OrderRepository orderRepository, AssistanceRepository assistanceRepository, OperatorService operatorService, ClientService clientService) {
         this.orderRepository = orderRepository;
         this.assistanceRepository = assistanceRepository;
         this.operatorService = operatorService;
+        this.clientService = clientService;
     }
 
 
     @Override
     public void saveOrder(Order order, Long operatorId, List<Long> listAssistances) {
         verifyOperatorId(order, operatorId);
+        verifyClient(order);
         verifyAndCreateAssistances(order, listAssistances);
         order.setStatus(StatusEnum.PENDENTE);
         orderRepository.save(order);
+    }
+
+    private void verifyClient(Order order) {
+        Client client = clientService.getClientById(order.getClient().getId());
+        order.setClient(client);
     }
 
     private void verifyOperatorId(Order order, Long operatorId) {

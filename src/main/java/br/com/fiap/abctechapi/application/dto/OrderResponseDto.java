@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 @Builder
 public class OrderResponseDto {
+    private Long orderId;
     private Long operatorId;
     private List<AssistanceResponseDto> services;
     private OrderLocationDto start;

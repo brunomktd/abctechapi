@@ -7,6 +7,7 @@ import br.com.fiap.abctechapi.application.dto.OrderRequestDto;
 import br.com.fiap.abctechapi.application.dto.OrderLocationDto;
 import br.com.fiap.abctechapi.application.dto.OrderResponseDto;
 import br.com.fiap.abctechapi.model.Assistance;
+import br.com.fiap.abctechapi.model.Client;
 import br.com.fiap.abctechapi.model.Order;
 import br.com.fiap.abctechapi.model.OrderLocation;
 import br.com.fiap.abctechapi.service.OrderService;
@@ -29,10 +30,8 @@ public class OrderApplicationImpl implements OrderApplication {
 
     @Override
     public void createOrder(OrderRequestDto orderRequestDto) {
-        // TODO: Remover comentário no próximo commit
         Order order = Order.builder()
-//                .start(getOrderLocationFromLocationDto(orderRequestDto.getStart()))
-//                .end(getOrderLocationFromLocationDto(orderRequestDto.getEnd()))
+                .client(Client.builder().id(orderRequestDto.getClientId()).build())
                 .build();
         orderService.saveOrder(order, orderRequestDto.getOperatorId(), orderRequestDto.getServices());
     }
@@ -61,6 +60,7 @@ public class OrderApplicationImpl implements OrderApplication {
 
     private OrderResponseDto convertOrderToOrderResponseDto(Order order) {
         return OrderResponseDto.builder()
+                .orderId(order.getId())
                 .operatorId(order.getOperator().getId())
                 .services(getServices(order.getServices()))
                 .status(order.getStatus())

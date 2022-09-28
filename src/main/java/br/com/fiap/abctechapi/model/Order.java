@@ -34,6 +34,10 @@ public class Order {
     @JoinColumn(name = "operator_id", nullable = false, foreignKey = @ForeignKey(name = "FK_operator_id"))
     private Operator operator;
 
+    @ManyToOne
+    @JoinColumn(name = "client_id", nullable = false, foreignKey = @ForeignKey(name = "FK_client_id"))
+    private Client client;
+
     public boolean hasMinAssists(){
         return !this.services.isEmpty();
     }

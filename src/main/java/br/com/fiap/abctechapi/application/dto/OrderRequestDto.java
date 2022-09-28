@@ -9,6 +9,7 @@ import java.util.List;
 @Builder
 public class OrderRequestDto {
     private Long operatorId;
+    private Long clientId;
     private List<Long> services;
     private OrderLocationDto start;
     private OrderLocationDto end;
