@@ -16,6 +16,17 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  cloud:
+    loadbalancer:
+      ribbon:
+        enable: false
+  feign:
+    client:
+      config:
+        feignName:
+          connectTimeout: 5000
+          readTimeout: 5000
+          loggerLevel: full
 
 app:
   name: ABC Tech API
@@ -25,7 +36,6 @@ app:
     description: API DOC to work ABC Tech
     base-package: br.com.fiap.abctechapi
     contact-name: Grupo B
-#    contact-email: apisupportgroup@abc.com
     swagger:
       enable: true
 
