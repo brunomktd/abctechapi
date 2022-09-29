@@ -7,6 +7,7 @@ import br.com.fiap.abctechapi.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,5 +28,10 @@ public class ClientServiceImpl implements ClientService {
             throw new ClientNotFoundException("Client is invalid", "O cliente informado não existe");
         }
         return clientOptional.get();
+    }
+
+    @Override
+    public List<Client> getAllClients() {
+        return clientRepository.findAll();
     }
 }

@@ -10,6 +10,9 @@ import br.com.fiap.abctechapi.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
 public class ClientApplicationImpl implements ClientApplication {
 
@@ -57,5 +60,11 @@ public class ClientApplicationImpl implements ClientApplication {
                 .email(clientRequest.getEmail())
                 .address(address)
                 .build();
+    }
+
+    @Override
+    public List<ClientResponseDto> getAllClients() {
+        List<Client> clientList = clientService.getAllClients();
+        return clientList.stream().map(this::convertEntityToClientResponse).collect(Collectors.toList());
     }
 }
