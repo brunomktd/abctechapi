@@ -1,10 +1,7 @@
 package br.com.fiap.abctechapi.service.impl;
 
 import br.com.fiap.abctechapi.enums.StatusEnum;
-import br.com.fiap.abctechapi.handler.exception.AssistanceNotFoundException;
-import br.com.fiap.abctechapi.handler.exception.MaxAssistsException;
-import br.com.fiap.abctechapi.handler.exception.MinimumAssistsRequiredException;
-import br.com.fiap.abctechapi.handler.exception.StatusOrderException;
+import br.com.fiap.abctechapi.handler.exception.*;
 import br.com.fiap.abctechapi.model.*;
 import br.com.fiap.abctechapi.repository.AssistanceRepository;
 import br.com.fiap.abctechapi.repository.OrderRepository;
@@ -113,7 +110,7 @@ public class OrderServiceImpl implements OrderService {
     public Order getOrderById(Long orderId) {
         Optional<Order> orderOptional = orderRepository.findById(orderId);
         if (orderOptional.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order Id doesn't exists");
+            throw new OrderNotFoundException("Order Id doesn't exists", "Order id não existe");
         }
         return orderOptional.get();
     }

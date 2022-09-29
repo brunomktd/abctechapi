@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class OperatorController {
     private OperatorApplication operatorApplication;
 
     @PostMapping
-    public ResponseEntity<OperatorResponseDto> createOperator(@RequestBody OperatorRequestDto operatorRequestDto) {
+    public ResponseEntity<OperatorResponseDto> createOperator(@Valid @RequestBody OperatorRequestDto operatorRequestDto) {
         OperatorResponseDto operator = operatorApplication.createOperator(operatorRequestDto);
         URI uri = UriComponentsBuilder.fromPath("/operators/{id}").buildAndExpand(operator.getOperatorId()).toUri();
         return ResponseEntity.created(uri).body(operator);

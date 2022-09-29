@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
@@ -21,7 +22,7 @@ public class ClientController {
     private ClientApplication clientApplication;
 
     @PostMapping
-    public ResponseEntity<ClientResponseDto> create(@RequestBody ClientRequestDto clientRequest){
+    public ResponseEntity<ClientResponseDto> create(@Valid @RequestBody ClientRequestDto clientRequest){
         ClientResponseDto clientResponseDto = clientApplication.create(clientRequest);
         URI uri = UriComponentsBuilder.fromPath("/clients/{id}").buildAndExpand(clientResponseDto.getId()).toUri();
         return ResponseEntity.created(uri).body(clientResponseDto);

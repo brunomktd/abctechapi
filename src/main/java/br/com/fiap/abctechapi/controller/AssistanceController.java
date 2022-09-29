@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -16,18 +17,11 @@ import java.util.List;
 @RequestMapping("/assistances")
 public class AssistanceController {
 
-    private final AssistanceService service;
-
     @Autowired
     private AssistanceApplication assistanceApplication;
 
-    @Autowired
-    public AssistanceController(AssistanceService service){
-        this.service = service;
-    }
-
     @PostMapping
-    public ResponseEntity<AssistanceResponseDto> createAssist(@RequestBody AssistanceRequestDto assistanceRequestDto) {
+    public ResponseEntity<AssistanceResponseDto> createAssist(@Valid @RequestBody AssistanceRequestDto assistanceRequestDto) {
         AssistanceResponseDto assistance = this.assistanceApplication.createAssistance(assistanceRequestDto);
         URI uri = UriComponentsBuilder.fromPath("/assistances/{id}").buildAndExpand(assistance.getId()).toUri();
         return ResponseEntity.created(uri).body(assistance);
