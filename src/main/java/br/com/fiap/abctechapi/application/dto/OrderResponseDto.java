@@ -4,6 +4,7 @@ import br.com.fiap.abctechapi.enums.StatusEnum;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -15,4 +16,5 @@ public class OrderResponseDto {
     private OrderLocationDto start;
     private OrderLocationDto end;
     private StatusEnum status;
+    private LocalDateTime createdAt;
 }

@@ -66,6 +66,7 @@ public class OrderApplicationImpl implements OrderApplication {
                 .status(order.getStatus())
                 .start(convertOrderLocationToOrderLocationDto(order.getStart()))
                 .end(convertOrderLocationToOrderLocationDto(order.getEnd()))
+                .createdAt(order.getCreatedAt())
                 .build();
     }
 

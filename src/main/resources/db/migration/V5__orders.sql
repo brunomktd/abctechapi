@@ -9,12 +9,14 @@ create table if not exists order_location
 
 create table if not exists orders
 (
-    id                      bigint auto_increment primary key,
-    status                  int    null,
-    client_id               bigint not null,
-    end_order_location_id   bigint null,
-    operator_id             bigint not null,
-    start_order_location_id bigint null,
+    id                      bigint auto_increment
+    primary key,
+    created_at              datetime(6) null,
+    status                  int         null,
+    client_id               bigint      not null,
+    end_order_location_id   bigint      null,
+    operator_id             bigint      not null,
+    start_order_location_id bigint      null,
     constraint FK_client_id
     foreign key (client_id) references clients (id),
     constraint FK_end_order_id
