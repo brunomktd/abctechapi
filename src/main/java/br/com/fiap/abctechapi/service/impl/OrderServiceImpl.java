@@ -91,11 +91,12 @@ public class OrderServiceImpl implements OrderService {
             throw new StatusOrderException(HttpStatus.BAD_REQUEST, "Order ID is already finalized");
         }
 
-        if (status == StatusEnum.CANCELADO.ordinal() && !order.getStatus().equals(StatusEnum.ANDAMENTO)) {
+        if (status == StatusEnum.CANCELADO.ordinal()
+                && (order.getStatus().equals(StatusEnum.PENDENTE) || order.getStatus().equals(StatusEnum.ANDAMENTO))) {
             order.setStatus(StatusEnum.CANCELADO);
         }
 
-        if (status == StatusEnum.ANDAMENTO.ordinal() && !order.getStatus().equals(StatusEnum.ANDAMENTO)) {
+        if (status == StatusEnum.ANDAMENTO.ordinal() && order.getStatus().equals(StatusEnum.PENDENTE)) {
             order.setStatus(StatusEnum.ANDAMENTO);
             order.setStart(location);
         }
