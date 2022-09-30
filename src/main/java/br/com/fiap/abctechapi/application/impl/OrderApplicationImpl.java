@@ -6,6 +6,7 @@ import br.com.fiap.abctechapi.application.dto.AssistanceResponseDto;
 import br.com.fiap.abctechapi.application.dto.OrderRequestDto;
 import br.com.fiap.abctechapi.application.dto.OrderLocationDto;
 import br.com.fiap.abctechapi.application.dto.OrderResponseDto;
+import br.com.fiap.abctechapi.enums.StatusEnum;
 import br.com.fiap.abctechapi.model.Assistance;
 import br.com.fiap.abctechapi.model.Client;
 import br.com.fiap.abctechapi.model.Order;
@@ -43,8 +44,9 @@ public class OrderApplicationImpl implements OrderApplication {
     }
 
     @Override
-    public List<OrderResponseDto> getAllOrdersByOperator(Long operatorId) {
-        List<Order> allOrders = orderService.listOrderByOperator(operatorId);
+    public List<OrderResponseDto> getAllOrdersByFilter(Long status, Long operatorId) {
+        StatusEnum statusEnum = StatusEnum.getIndexStatus(status);
+        List<Order> allOrders = orderService.getAllOrdersByFilter(statusEnum, operatorId);
         return allOrders.stream().map(this::convertOrderToOrderResponseDto).collect(Collectors.toList());
     }
 

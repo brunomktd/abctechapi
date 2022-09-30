@@ -11,7 +11,7 @@ public interface OrderApplication {
 
     List<OrderResponseDto> getAllOrders();
 
-    List<OrderResponseDto> getAllOrdersByOperator(Long operatorId);
-
     void updateOrder(Long orderId, Long status, OrderLocationDto locationDto);
+
+    List<OrderResponseDto> getAllOrdersByFilter(Long status, Long operatorId);
 }

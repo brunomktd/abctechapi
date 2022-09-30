@@ -74,13 +74,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> listOrderByOperator(Long operatorId) {
-        return this.orderRepository.findAllByOperatorId(operatorId);
+    public List<Order> getAllOrders() {
+        return this.orderRepository.findAll();
     }
 
     @Override
-    public List<Order> getAllOrders() {
-        return this.orderRepository.findAll();
+    public List<Order> getAllOrdersByFilter(StatusEnum status, Long operatorId) {
+        return this.orderRepository.findAllByStatusOrOperatorIdAllIgnoreCase(status, operatorId);
     }
 
     @Override

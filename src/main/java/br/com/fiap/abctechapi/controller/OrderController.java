@@ -19,7 +19,7 @@ public class OrderController {
     private OrderApplication orderApplication;
 
     @PostMapping
-    public ResponseEntity<Object> createOrder(@Valid @RequestBody OrderRequestDto orderRequestDto){
+    public ResponseEntity<Object> createOrder(@Valid @RequestBody OrderRequestDto orderRequestDto) {
         orderApplication.createOrder(orderRequestDto);
         return ResponseEntity.ok().build();
     }
@@ -27,19 +27,21 @@ public class OrderController {
     @PutMapping("/{orderId}")
     public void updateStatus(@PathVariable("orderId") Long orderId,
                              @RequestParam("status") Long status,
-                             @Valid @RequestBody OrderLocationDto locationDto){
+                             @Valid @RequestBody OrderLocationDto locationDto) {
         orderApplication.updateOrder(orderId, status, locationDto);
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderResponseDto>> getAllOrders() {
-        List<OrderResponseDto> allOrders = orderApplication.getAllOrders();
+    public ResponseEntity<List<OrderResponseDto>> getAllOrders(@RequestParam(name = "status", required = false) Long status,
+                                                               @RequestParam(name = "operatorId", required = false) Long operatorId) {
+        List<OrderResponseDto> allOrders;
+
+        if (status != null || operatorId != null) {
+            allOrders = orderApplication.getAllOrdersByFilter(status, operatorId);
+        } else {
+            allOrders = orderApplication.getAllOrders();
+        }
         return ResponseEntity.ok(allOrders);
     }
 
-    @GetMapping("/operator/{operatorId}")
-    public ResponseEntity<List<OrderResponseDto>> getAllOrdersByOperator(@PathVariable("operatorId") Long operatorId) {
-        List<OrderResponseDto> allOrders = orderApplication.getAllOrdersByOperator(operatorId);
-        return ResponseEntity.ok(allOrders);
-    }
 }
