@@ -1,13 +1,24 @@
 package br.com.fiap.abctechapi.application.impl;
 
+import br.com.fiap.abctechapi.application.AssistanceApplication;
 import br.com.fiap.abctechapi.application.OrderApplication;
-import br.com.fiap.abctechapi.application.dto.OrderDto;
+import br.com.fiap.abctechapi.application.dto.AssistanceResponseDto;
+import br.com.fiap.abctechapi.application.dto.OrderRequestDto;
 import br.com.fiap.abctechapi.application.dto.OrderLocationDto;
+import br.com.fiap.abctechapi.application.dto.OrderResponseDto;
+import br.com.fiap.abctechapi.enums.StatusEnum;
+import br.com.fiap.abctechapi.model.Assistance;
+import br.com.fiap.abctechapi.model.Client;
 import br.com.fiap.abctechapi.model.Order;
 import br.com.fiap.abctechapi.model.OrderLocation;
 import br.com.fiap.abctechapi.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Component
 public class OrderApplicationImpl implements OrderApplication {
@@ -15,21 +26,66 @@ public class OrderApplicationImpl implements OrderApplication {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private AssistanceApplication assistanceApplication;
+
     @Override
-    public void createOrder(OrderDto orderDto) throws Exception {
+    public void createOrder(OrderRequestDto orderRequestDto) {
         Order order = Order.builder()
-                .operationId(orderDto.getOperatorId())
-                .start(getOrderLocationFromLocationDto(orderDto.getStart()))
-                .end(getOrderLocationFromLocationDto(orderDto.getEnd()))
+                .client(Client.builder().id(orderRequestDto.getClientId()).build())
                 .build();
-        orderService.saveOrder(order, orderDto.getServices());
+        orderService.saveOrder(order, orderRequestDto.getOperatorId(), orderRequestDto.getServices());
     }
 
-    private OrderLocation getOrderLocationFromLocationDto(OrderLocationDto orderLocationDto){
-        return OrderLocation.builder()
-                .latitude(orderLocationDto.getLatitude())
-                .longitude(orderLocationDto.getLongitude())
-                .date(orderLocationDto.getDateTime())
+    @Override
+    public List<OrderResponseDto> getAllOrders() {
+        List<Order> allOrders = orderService.getAllOrders();
+        return allOrders.stream().map(this::convertOrderToOrderResponseDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderResponseDto> getAllOrdersByFilter(Long status, Long operatorId) {
+        StatusEnum statusEnum = StatusEnum.getIndexStatus(status);
+        List<Order> allOrders = orderService.getAllOrdersByFilter(statusEnum, operatorId);
+        return allOrders.stream().map(this::convertOrderToOrderResponseDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public void updateOrder(Long orderId, Long status, OrderLocationDto locationDto) {
+        OrderLocation location = OrderLocation.builder()
+                .longitude(locationDto.getLongitude())
+                .latitude(locationDto.getLatitude())
+                .date(new Date())
+                .build();
+        orderService.updateOrder(orderId, status, location);
+    }
+
+    private OrderResponseDto convertOrderToOrderResponseDto(Order order) {
+        return OrderResponseDto.builder()
+                .orderId(order.getId())
+                .operatorId(order.getOperator().getId())
+                .services(getServices(order.getServices()))
+                .status(order.getStatus())
+                .start(convertOrderLocationToOrderLocationDto(order.getStart()))
+                .end(convertOrderLocationToOrderLocationDto(order.getEnd()))
+                .createdAt(order.getCreatedAt())
                 .build();
     }
+
+    private OrderLocationDto convertOrderLocationToOrderLocationDto(OrderLocation orderLocation) {
+        if (Objects.isNull(orderLocation)) {
+            return null;
+        }
+
+        return OrderLocationDto.builder()
+                .latitude(orderLocation.getLatitude())
+                .longitude(orderLocation.getLongitude())
+                .dateTime(orderLocation.getDate())
+                .build();
+    }
+
+    private List<AssistanceResponseDto> getServices(List<Assistance> services) {
+        return services.stream().map(i -> this.assistanceApplication.convertEntityToAssistanceResponseDto(i)).collect(Collectors.toList());
+    }
+
 }

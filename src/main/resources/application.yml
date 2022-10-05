@@ -1,8 +1,8 @@
 server:
   port: 8080
 
-build.name: @project.name@
-build.version: @project.version@
+build.name: '@project.name@'
+build.version: '@project.version@'
 
 spring:
   datasource:
@@ -12,10 +12,35 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
-    show-sql: true
+    show-sql: false
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  cloud:
+    loadbalancer:
+      ribbon:
+        enable: false
+  feign:
+    client:
+      config:
+        feignName:
+          connectTimeout: 5000
+          readTimeout: 5000
+          loggerLevel: full
 
-logging:
-  level:
-    org:
-      hibernate:
-        type: info
+app:
+  name: ABC Tech API
+  api:
+    title: ABC Tech API
+    version: 1.0.0
+    description: API DOC to work ABC Tech
+    base-package: br.com.fiap.abctechapi
+    contact-name: Grupo B
+    swagger:
+      enable: true
+
+#logging:
+#  level:
+#    org:
+#      hibernate:
+#        type: info
