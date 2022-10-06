@@ -18,7 +18,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Configuration
-@EnableSwagger2
 @Data
 @ConfigurationProperties("app.api")
 @ConditionalOnProperty(name = "app.api.swagger.enable", havingValue = "true", matchIfMissing = false)
