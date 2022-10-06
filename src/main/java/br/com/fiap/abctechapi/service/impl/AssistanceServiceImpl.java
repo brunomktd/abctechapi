@@ -22,4 +22,9 @@ public class AssistanceServiceImpl implements AssistanceService {
     public List<Assistance> getAssistanceList() {
         return repository.findAll();
     }
+
+    @Override
+    public Assistance createAssistance(Assistance assistance) {
+        return repository.save(assistance);
+    }
 }

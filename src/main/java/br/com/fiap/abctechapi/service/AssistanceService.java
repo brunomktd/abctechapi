@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface AssistanceService {
     List<Assistance> getAssistanceList();
+
+    Assistance createAssistance(Assistance assistance);
 }

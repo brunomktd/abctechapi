@@ -1,14 +1,16 @@
 package br.com.fiap.abctechapi.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
-@Data
 @Table(name = "assistances")
+@Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Assistance {
@@ -22,5 +24,9 @@ public class Assistance {
 
     @Column(name = "description", nullable = false, length = 300)
     private String description;
+
+//    @ManyToOne
+//    @JoinColumn(name = "order_id")
+//    private Order order;
 
 }
