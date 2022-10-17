@@ -12,6 +12,7 @@ import java.util.List;
 public class OrderResponseDto {
     private Long orderId;
     private Long operatorId;
+    private ClientResponseDto client;
     private List<AssistanceResponseDto> services;
     private OrderLocationDto start;
     private OrderLocationDto end;
