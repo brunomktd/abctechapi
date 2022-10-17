@@ -1,14 +1,13 @@
 package br.com.fiap.abctechapi.application.dto;
 
 
-import br.com.fiap.abctechapi.model.Address;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.persistence.*;
-
 @Data
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ClientResponseDto {
     private Long id;
     private String name;
