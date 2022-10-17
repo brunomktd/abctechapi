@@ -2,10 +2,7 @@ package br.com.fiap.abctechapi.application.impl;
 
 import br.com.fiap.abctechapi.application.AssistanceApplication;
 import br.com.fiap.abctechapi.application.OrderApplication;
-import br.com.fiap.abctechapi.application.dto.AssistanceResponseDto;
-import br.com.fiap.abctechapi.application.dto.OrderRequestDto;
-import br.com.fiap.abctechapi.application.dto.OrderLocationDto;
-import br.com.fiap.abctechapi.application.dto.OrderResponseDto;
+import br.com.fiap.abctechapi.application.dto.*;
 import br.com.fiap.abctechapi.enums.StatusEnum;
 import br.com.fiap.abctechapi.model.Assistance;
 import br.com.fiap.abctechapi.model.Client;
@@ -64,6 +61,10 @@ public class OrderApplicationImpl implements OrderApplication {
         return OrderResponseDto.builder()
                 .orderId(order.getId())
                 .operatorId(order.getOperator().getId())
+                .client(ClientResponseDto.builder()
+                        .id(order.getClient().getId())
+                        .name(order.getClient().getName())
+                        .build())
                 .services(getServices(order.getServices()))
                 .status(order.getStatus())
                 .start(convertOrderLocationToOrderLocationDto(order.getStart()))
