@@ -1,21 +1,22 @@
 package br.com.fiap.abctechapi.enums;
 
-public enum StatusEnum {
-    PENDENTE,
-    ANDAMENTO,
-    CONCLUIDO,
-    CANCELADO;
+import lombok.AllArgsConstructor;
 
-    public static StatusEnum getIndexStatus(Long index) {
-        if (index == 0) {
-            return PENDENTE;
-        } else if (index == 1) {
-            return ANDAMENTO;
-        } else if (index == 2) {
-            return CONCLUIDO;
-        } else if (index == 3) {
-            return CANCELADO;
-        }
-        return null;
+import java.util.Arrays;
+import java.util.Optional;
+
+@AllArgsConstructor
+public enum StatusEnum {
+    PENDENTE("0"),
+    ANDAMENTO("1"),
+    CONCLUIDO("2"),
+    CANCELADO("3");
+
+    private String code;
+
+    public static StatusEnum getStatusEnumByCode(String code) {
+        Optional<StatusEnum> statusEnumOptional = Arrays.stream(StatusEnum.values()).filter(s -> s.code.equalsIgnoreCase(code)).findFirst();
+        return statusEnumOptional.orElse(null);
     }
+
 }
