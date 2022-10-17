@@ -32,7 +32,7 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderResponseDto>> getAllOrders(@RequestParam(name = "status", required = false) Long status,
+    public ResponseEntity<List<OrderResponseDto>> getAllOrders(@RequestParam(name = "status", required = false) String status,
                                                                @RequestParam(name = "operatorId", required = false) Long operatorId) {
         List<OrderResponseDto> allOrders;
 

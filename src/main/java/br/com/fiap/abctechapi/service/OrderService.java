@@ -1,6 +1,5 @@
 package br.com.fiap.abctechapi.service;
 
-import br.com.fiap.abctechapi.enums.StatusEnum;
 import br.com.fiap.abctechapi.model.Order;
 import br.com.fiap.abctechapi.model.OrderLocation;
 
@@ -13,5 +12,5 @@ public interface OrderService {
 
     void updateOrder(Long orderId, Long status, OrderLocation location);
 
-    List<Order> getAllOrdersByFilter(StatusEnum statusEnum, Long operatorId);
+    List<Order> getAllOrdersByFilter(int statusEnum, Long operatorId);
 }
