@@ -107,7 +107,7 @@ class OrderServiceImplTest {
 
     @Test
     public void shouldGetAllOrdersFromFilter() {
-        Mockito.when(orderRepository.findAllOrder(Mockito.any(), Mockito.anyLong()))
+        Mockito.when(orderRepository.findAllOrder(Mockito.anyInt(), Mockito.anyLong()))
                 .thenReturn(Collections.singletonList(Mockito.mock(Order.class)));
 
         List<Order> allOrders = service.getAllOrdersByFilter(StatusEnum.ANDAMENTO.ordinal(), 1L);
