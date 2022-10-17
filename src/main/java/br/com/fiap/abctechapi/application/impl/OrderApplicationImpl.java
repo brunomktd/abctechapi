@@ -41,9 +41,9 @@ public class OrderApplicationImpl implements OrderApplication {
     }
 
     @Override
-    public List<OrderResponseDto> getAllOrdersByFilter(Long status, Long operatorId) {
-        StatusEnum statusEnum = StatusEnum.getIndexStatus(status);
-        List<Order> allOrders = orderService.getAllOrdersByFilter(statusEnum, operatorId);
+    public List<OrderResponseDto> getAllOrdersByFilter(String status, Long operatorId) {
+        StatusEnum statusEnum = StatusEnum.getStatusEnumByCode(status);
+        List<Order> allOrders = orderService.getAllOrdersByFilter(statusEnum.ordinal(), operatorId);
         return allOrders.stream().map(this::convertOrderToOrderResponseDto).collect(Collectors.toList());
     }
 

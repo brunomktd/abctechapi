@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
+    @Transactional
     @Override
     public void saveOrder(Order order, Long operatorId, List<Long> listAssistances) {
         verifyOperatorId(order, operatorId);
@@ -79,8 +81,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> getAllOrdersByFilter(StatusEnum status, Long operatorId) {
-        return this.orderRepository.findAllByStatusOrOperatorIdAllIgnoreCase(status, operatorId);
+    public List<Order> getAllOrdersByFilter(int status, Long operatorId) {
+        return this.orderRepository.findAllOrder(status, operatorId);
     }
 
     @Override
