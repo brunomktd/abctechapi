@@ -28,7 +28,6 @@ public class SwaggerConfig {
     private String description;
     private String basePackage;
     private String contactName;
-//    private String contactEmail;
 
     @Bean
     public Docket api() {
