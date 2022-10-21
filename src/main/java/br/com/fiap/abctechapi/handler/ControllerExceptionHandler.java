@@ -59,6 +59,18 @@ public class ControllerExceptionHandler {
         return new ResponseEntity<>(messageResponse, exception.getStatus());
     }
 
+    @ExceptionHandler(ViaCepErrorException.class)
+    public ResponseEntity<ErrorMessageResponse> viaCepError(ViaCepErrorException exception){
+        ErrorMessageResponse messageResponse = ErrorMessageResponse.builder()
+                .message(exception.getMessage())
+                .description(exception.getMessage())
+                .timestamp(new Date())
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .build();
+
+        return new ResponseEntity<>(messageResponse, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorMessageResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
         List<ErrorsDescriptionDto> errors = new ArrayList<>();

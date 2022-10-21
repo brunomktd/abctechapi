@@ -25,10 +25,11 @@ public class OrderController {
     }
 
     @PutMapping("/{orderId}")
-    public void updateStatus(@PathVariable("orderId") Long orderId,
-                             @RequestParam("status") Long status,
-                             @Valid @RequestBody OrderLocationDto locationDto) {
+    public ResponseEntity<Object> updateStatus(@PathVariable("orderId") Long orderId,
+                                               @RequestParam("status") Long status,
+                                               @Valid @RequestBody OrderLocationDto locationDto) {
         orderApplication.updateOrder(orderId, status, locationDto);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping

@@ -13,6 +13,7 @@ import br.com.fiap.abctechapi.service.OperatorService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -39,7 +40,7 @@ class OrderServiceImplTest {
     private ArgumentCaptor<Order> captor;
 
     @Test
-    public void shouldCreateOrderWhenMethodCalled(){
+    void shouldCreateOrderWhenMethodCalled(){
         Order orderMock = Order.builder()
                 .client(Client.builder().id(1L).build())
                 .build();
@@ -55,7 +56,7 @@ class OrderServiceImplTest {
     }
 
     @Test
-    public void shouldThrowAssistanceNotFoundWhenAssistanceDoesNotExists(){
+    void shouldThrowAssistanceNotFoundWhenAssistanceDoesNotExists(){
         Order orderMock = Order.builder()
                 .client(Client.builder().id(1L).build())
                 .build();
@@ -64,11 +65,15 @@ class OrderServiceImplTest {
         Mockito.when(clientService.getClientById(Mockito.any())).thenReturn(Mockito.mock(Client.class));
         Mockito.when(assistanceRepository.findById(Mockito.any())).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(AssistanceNotFoundException.class, () -> service.saveOrder(orderMock, 1L, Collections.singletonList(1L)));
+        Assertions.assertThrows(AssistanceNotFoundException.class, getExecutable(orderMock, Collections.singletonList(1L)));
+    }
+
+    private Executable getExecutable(Order orderMock, List<Long> listAssistances) {
+        return () -> service.saveOrder(orderMock, 1L, listAssistances);
     }
 
     @Test
-    public void shouldThrowMinimumAssistRequiredWhenTotalAssistsIsZero(){
+    void shouldThrowMinimumAssistRequiredWhenTotalAssistsIsZero(){
         Order orderMock = Order.builder()
                 .client(Client.builder().id(1L).build())
                 .build();
@@ -76,11 +81,15 @@ class OrderServiceImplTest {
         Mockito.when(operatorService.getOperatorById(Mockito.any())).thenReturn(Mockito.mock(Operator.class));
         Mockito.when(clientService.getClientById(Mockito.any())).thenReturn(Mockito.mock(Client.class));
 
-        Assertions.assertThrows(MinimumAssistsRequiredException.class, () -> service.saveOrder(orderMock, 1L, Collections.emptyList()));
+        Assertions.assertThrows(MinimumAssistsRequiredException.class, getExecutable(orderMock));
+    }
+
+    private Executable getExecutable(Order orderMock) {
+        return () -> service.saveOrder(orderMock, 1L, Collections.emptyList());
     }
 
     @Test
-    public void shouldThrowMaxAssistsExceptionWhenTotalAssistancesIsMoreThanFifteen(){
+    void shouldThrowMaxAssistsExceptionWhenTotalAssistancesIsMoreThanFifteen(){
         Order orderMock = Order.builder()
                 .client(Client.builder().id(1L).build())
                 .build();
@@ -99,14 +108,14 @@ class OrderServiceImplTest {
     }
 
     @Test
-    public void shouldGetAllOrders() {
+    void shouldGetAllOrders() {
         Mockito.when(orderRepository.findAll()).thenReturn(Collections.singletonList(Mockito.mock(Order.class)));
         List<Order> allOrders = service.getAllOrders();
         Assertions.assertEquals(1, allOrders.size());
     }
 
     @Test
-    public void shouldGetAllOrdersFromFilter() {
+    void shouldGetAllOrdersFromFilter() {
         Mockito.when(orderRepository.findAllOrder(Mockito.anyInt(), Mockito.anyLong()))
                 .thenReturn(Collections.singletonList(Mockito.mock(Order.class)));
 
@@ -115,25 +124,25 @@ class OrderServiceImplTest {
     }
 
     @Test
-    public void shouldThrowErrorWhenStatusOrderHasStatusConcluido(){
+    void shouldThrowErrorWhenStatusOrderHasStatusConcluido(){
         Order orderMock = Order.builder()
                 .status(StatusEnum.CONCLUIDO)
                 .build();
         Mockito.when(orderRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(orderMock));
-        Assertions.assertThrows(StatusOrderException.class, () -> service.updateOrder(1L, (long) StatusEnum.PENDENTE.ordinal(), OrderLocation.builder().build()));
+        Assertions.assertThrows(StatusOrderException.class, this::executeUpdateOrder);
     }
 
     @Test
-    public void shouldThrowErrorWhenStatusOrderHasStatusCancelado(){
+    void shouldThrowErrorWhenStatusOrderHasStatusCancelado(){
         Order orderMock = Order.builder()
                 .status(StatusEnum.CANCELADO)
                 .build();
         Mockito.when(orderRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(orderMock));
-        Assertions.assertThrows(StatusOrderException.class, () -> service.updateOrder(1L, (long) StatusEnum.PENDENTE.ordinal(), OrderLocation.builder().build()));
+        Assertions.assertThrows(StatusOrderException.class, this::executeUpdateOrder);
     }
 
     @Test
-    public void shouldUpdateStatusToCanceladoWhenStatusOrderToBePendente(){
+    void shouldUpdateStatusToCanceladoWhenStatusOrderToBePendente(){
         Order orderMock = Order.builder()
                 .status(StatusEnum.PENDENTE)
                 .build();
@@ -149,7 +158,7 @@ class OrderServiceImplTest {
     }
 
     @Test
-    public void shouldUpdateStatusToCanceladoWhenStatusOrderToBeAndamento(){
+    void shouldUpdateStatusToCanceladoWhenStatusOrderToBeAndamento(){
         Order orderMock = Order.builder()
                 .status(StatusEnum.ANDAMENTO)
                 .build();
@@ -165,7 +174,7 @@ class OrderServiceImplTest {
     }
 
     @Test
-    public void shouldUpdateStatusToAndamentoWhenStatusOrderToBePendente(){
+    void shouldUpdateStatusToAndamentoWhenStatusOrderToBePendente(){
         Order orderMock = Order.builder()
                 .status(StatusEnum.PENDENTE)
                 .build();
@@ -181,7 +190,7 @@ class OrderServiceImplTest {
     }
 
     @Test
-    public void shouldUpdateStatusToConcluidoWhenStatusOrderToBeAndamento(){
+    void shouldUpdateStatusToConcluidoWhenStatusOrderToBeAndamento(){
         Order orderMock = Order.builder()
                 .status(StatusEnum.ANDAMENTO)
                 .build();
@@ -196,4 +205,7 @@ class OrderServiceImplTest {
         Assertions.assertEquals(StatusEnum.CONCLUIDO, captorValue.getStatus());
     }
 
+    private void executeUpdateOrder() {
+        service.updateOrder(1L, (long) StatusEnum.PENDENTE.ordinal(), OrderLocation.builder().build());
+    }
 }
